@@ -1,6 +1,9 @@
 #!/bin/bash
-# Author: Yan Doroshenko
-# github.com/YanDoroshenko
+#
+# Simple command line Pulseaudio volume control
+#
+# by Yan Doroshenko
+# https://github.com/YanDoroshenko/pulseudio-control
 
 SINK=$(pacmd list-sinks|awk '/\* index:/{ print $3 }')
 VOLUME_LEVEL=$(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|,]//g')
@@ -11,7 +14,7 @@ fi
 
 DELTA=5
 if [ ! -z $2 ]; then
-    if [[ $2 =~ ^[1-9][0-9]?$|^100$ ]]; then
+    if [[ $2 =~ ^[0-9][0-9]?$|^100$ ]]; then
 	DELTA=$2
     fi
 fi
@@ -21,24 +24,20 @@ case "$1" in
 	VOLUME_LEVEL=$(($VOLUME_LEVEL + $DELTA))
 	if [ $VOLUME_LEVEL -gt 100 ]; then
 	    VOLUME_LEVEL=100
-	    pactl set-sink-volume $SINK  100%
-	else 
-	    pactl set-sink-volume $SINK  $VOLUME_LEVEL%
 	fi
 	;;
     D|d|[D,d]own)
 	VOLUME_LEVEL=$(($VOLUME_LEVEL - $DELTA))
 	if [ $VOLUME_LEVEL -lt 0 ]; then
 	    VOLUME_LEVEL=0
-	    pactl set-sink-volume $SINK  0%
-	else 
-	    pactl set-sink-volume $SINK  $VOLUME_LEVEL%
 	fi
 	;;
     M|m|[M,m]ute)
 	pactl set-sink-mute $SINK toggle
 	MUTED=$(pacmd list-sinks|grep -A 15 '* index'|awk '/muted:/{ print $2 }')
 	;;
+    S|s|[S,s]et)
+	VOLUME_LEVEL=$DELTA
 esac
 
 if [[ $MUTED == "yes" ]]; then
@@ -53,10 +52,11 @@ else
     ICON=audio-volume-high
 fi
 
-if [ $MUTED == "yes" ]; then
+if [[ $MUTED == "yes" ]]; then
     DISPLAYED_VOLUME=0
 else 
     DISPLAYED_VOLUME=$VOLUME_LEVEL
 fi
 
+pactl set-sink-volume $SINK $VOLUME_LEVEL%
 notify-send -t 1000 -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME --hint=string:synchronous:volume "Volume down $DELTA%" ""
