@@ -7,3 +7,6 @@ Simple bash script to allow for control of Pulseaudio volume. Simply map the fol
 	/usr/bin/pulseaudiocontrol down        ==>  Decrease vol by 5 %
 	/usr/bin/pulseaudiocontrol down 50     ==>  Decrease vol by 50 %
 	/usr/bin/pulseaudiocontrol set 40      ==>  Set vol to 40%
+	
+## Links
+AUR package: https://aur.archlinux.org/packages/pulseaudiocontrol
