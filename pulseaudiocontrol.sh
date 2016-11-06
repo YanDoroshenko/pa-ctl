@@ -21,19 +21,21 @@ fi
 
 case "$1" in
     U|u|[U,u]p)
+	pactl set-sink-mute $SINK 0
 	VOLUME_LEVEL=$(($VOLUME_LEVEL + $DELTA))
 	if [ $VOLUME_LEVEL -gt 100 ]; then
 	    VOLUME_LEVEL=100
 	fi
 	;;
     D|d|[D,d]own)
+	pactl set-sink-mute $SINK 0
 	VOLUME_LEVEL=$(($VOLUME_LEVEL - $DELTA))
 	if [ $VOLUME_LEVEL -lt 0 ]; then
 	    VOLUME_LEVEL=0
 	fi
 	;;
     M|m|[M,m]ute)
-	pactl set-sink-mute $SINK toggle
+	pactl set-sink-mute $SINK 1
 	MUTED=$(pacmd list-sinks|grep -A 15 '* index'|awk '/muted:/{ print $2 }')
 	;;
     S|s|[S,s]et)
