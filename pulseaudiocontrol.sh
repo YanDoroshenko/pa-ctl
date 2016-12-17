@@ -13,6 +13,7 @@ if [ -z $1 ]; then
 fi
 
 DELTA=5
+
 if [ ! -z $2 ]; then
     if [[ $2 =~ ^[0-9][0-9]?$|^100$ ]]; then
 	DELTA=$2
@@ -61,4 +62,10 @@ else
 fi
 
 pactl set-sink-volume $SINK $VOLUME_LEVEL%
-notify-send -t 80 -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume down $DELTA%" ""
+if [ ! -z $2 ]||[ ! -z $3 ]; then
+    if [ $2 = "-d" ]||[ $3 = "-d" ]; then
+	notify-send -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume: $VOLUME_LEVEL%" ""
+    else 
+	echo "Usage:\rpulseaudiocontrol {up/down/mute/set} [-d]\n-d displays notification"
+    fi
+fi
