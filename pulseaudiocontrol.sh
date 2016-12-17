@@ -35,7 +35,7 @@ case "$1" in
 	fi
 	;;
     M|m|[M,m]ute)
-	pactl set-sink-mute $SINK 1
+	pactl set-sink-mute $SINK toggle
 	MUTED=$(pacmd list-sinks|grep -A 15 '* index'|awk '/muted:/{ print $2 }')
 	;;
     S|s|[S,s]et)
@@ -61,4 +61,4 @@ else
 fi
 
 pactl set-sink-volume $SINK $VOLUME_LEVEL%
-notify-send -t 1000 -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME --hint=string:synchronous:volume "Volume down $DELTA%" ""
+notify-send -t 80 -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume down $DELTA%" ""
