@@ -66,8 +66,4 @@ if [ ! -z $2 ] && [ $2  == "-d" ]; then
     notify-send -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume: $VOLUME_LEVEL%" ""
 elif [ ! -z $3 ] && [ $3  == "-d" ]; then
     notify-send -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume: $VOLUME_LEVEL%" ""
-else 
-    echo "Usage:
-    pulseaudiocontrol {up/down/mute/set} [-d]
-    -d displays notification"
 fi
