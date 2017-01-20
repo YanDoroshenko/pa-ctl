@@ -9,7 +9,7 @@ SINK=$(pacmd list-sinks|awk '/\* index:/{ print $3 }')
 VOLUME_LEVEL=$(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|,]//g')
 
 if [ -z $1 ]; then
-    echo "Usage: pa-ctl up/down/mute"
+    echo "Usage: pulseaudiocontrol up/down/mute"
 fi
 
 DELTA=5
@@ -62,10 +62,12 @@ else
 fi
 
 pactl set-sink-volume $SINK $VOLUME_LEVEL%
-if [ ! -z $2 ]||[ ! -z $3 ]; then
-    if [ $2 = "-d" ]||[ $3 = "-d" ]; then
-	notify-send -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume: $VOLUME_LEVEL%" ""
-    else 
-	echo "Usage:\rpulseaudiocontrol {up/down/mute/set} [-d]\n-d displays notification"
-    fi
+if [ ! -z $2 ] && [ $2  == "-d" ]; then
+    notify-send -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume: $VOLUME_LEVEL%" ""
+elif [ ! -z $3 ] && [ $3  == "-d" ]; then
+    notify-send -i $ICON --hint=int:transient:1 --hint=int:value:$DISPLAYED_VOLUME "Volume: $VOLUME_LEVEL%" ""
+else 
+    echo "Usage:
+    pulseaudiocontrol {up/down/mute/set} [-d]
+    -d displays notification"
 fi
